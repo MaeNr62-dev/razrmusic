@@ -3,20 +3,46 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+// Load keystore properties if present (keystore.properties) for local dev
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace "fr.razrmusic.maenr62"
     compileSdk 34
 
     defaultConfig {
         applicationId "fr.razrmusic.maenr62"
-        minSdk 33
+        // minSdk lowered to 21 to be compatible with Jetpack Compose (min 21)
+        minSdk 21
         targetSdk 34
         versionCode 1
         versionName "1.0"
     }
 
+    signingConfigs {
+        release {
+            if (!keystoreProperties.isEmpty()) {
+                storeFile file(keystoreProperties['storeFile'] ?: 'keystore.jks')
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            } else {
+                // Fallback to CI environment variables (used in GitHub Actions)
+                storeFile file(System.getenv('GITHUB_WORKSPACE') + '/keystore.jks')
+                storePassword System.getenv('KEYSTORE_PASSWORD')
+                keyAlias System.getenv('KEY_ALIAS')
+                keyPassword System.getenv('KEY_PASSWORD')
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
         }
     }
