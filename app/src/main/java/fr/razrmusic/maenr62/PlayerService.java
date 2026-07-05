@@ -22,7 +22,8 @@ public class PlayerService extends Service {
 
         mediaSession = new MediaSessionCompat(this, "RazrMusicSession");
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.sample); // musique test
+        // mediaPlayer = MediaPlayer.create(this, R.raw.sample); // musique test
+        // TODO: Add sample.mp3 to app/src/main/res/raw/ directory
 
         Notification notification = new NotificationCompat.Builder(this, "razr_music")
                 .setContentTitle("Razr Music")
@@ -33,7 +34,7 @@ public class PlayerService extends Service {
                 .build();
 
         startForeground(1, notification);
-        mediaPlayer.start();
+        // mediaPlayer.start();
     }
 
     @Override
@@ -43,7 +44,9 @@ public class PlayerService extends Service {
 
     @Override
     public void onDestroy() {
-        mediaPlayer.release();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+        }
         mediaSession.release();
         super.onDestroy();
     }
