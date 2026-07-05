@@ -1,4 +1,4 @@
 <adaptive-icon>
-    <background android:drawable="@color/black"/>
+    <background android:drawable="@android:color/black"/>
     <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
 </adaptive-icon>
