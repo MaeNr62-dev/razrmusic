@@ -11,4 +11,5 @@ jobs:
           distribution: temurin
           java-version: 17
       - run: echo "$KEYSTORE_BASE64" | base64 --decode > keystore.jks
+      - run: chmod +x ./gradlew
       - run: ./gradlew bundleRelease
