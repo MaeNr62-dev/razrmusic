@@ -13,3 +13,8 @@ jobs:
           java-version: 17
       - run: chmod +x ./gradlew
       - run: ./gradlew assembleRelease --info
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: razrmusic-apk
+          path: app/build/outputs/apk/release/
