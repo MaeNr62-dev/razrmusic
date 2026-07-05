@@ -4,12 +4,38 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
+
+      # restore keystore from secret
       - run: echo "$KEYSTORE_BASE64" | base64 --decode > keystore.jks
+
+      # create keystore.properties used by Gradle
+      - run: |
+          cat > keystore.properties <<EOF
+          storeFile=keystore.jks
+          storePassword=${KEYSTORE_PASSWORD}
+          keyAlias=${KEY_ALIAS}
+          keyPassword=${KEY_PASSWORD}
+          EOF
+
       - run: chmod +x ./gradlew
-      - run: ./gradlew bundleRelease
+
+      # build signed release APK
+      - run: ./gradlew clean assembleRelease
+
+      # upload produced APK(s)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk
+          path: app/build/outputs/apk/release/*.apk
