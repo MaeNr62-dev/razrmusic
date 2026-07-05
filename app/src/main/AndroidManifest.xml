@@ -1,21 +1,27 @@
-<application
-    android:label="Razr Music"
-    android:icon="@mipmap/ic_launcher">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="fr.razrmusic.maenr62">
 
-    <activity android:name=".MainActivity">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN"/>
-            <category android:name="android.intent.category.LAUNCHER"/>
-        </intent-filter>
-    </activity>
+    <application
+        android:label="Razr Music"
+        android:icon="@mipmap/ic_launcher">
 
-    <service
-        android:name=".PlayerService"
-        android:foregroundServiceType="mediaPlayback"/>
-    
-    <receiver android:name=".WidgetProvider">
-        <meta-data
-            android:name="android.appwidget.provider"
-            android:resource="@xml/widget_player"/>
-    </receiver>
-</application>
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".PlayerService"
+            android:foregroundServiceType="mediaPlayback"/>
+        
+        <receiver android:name=".WidgetProvider">
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_player"/>
+        </receiver>
+    </application>
+
+</manifest>
